@@ -1,0 +1,16 @@
+{
+    "name": "translator",
+    "homepage": "https://github.com/DasRed/js-translator",
+    "main": "Simple translator with bbcode support.",
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "bbcode-parser": "^1.0.0"
+    }
+}
