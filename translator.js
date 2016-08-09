@@ -149,7 +149,7 @@
                     key = key.slice(0, key.length - 1);
                 }
 
-                var text = this.translation[key];
+                var text = this.translations[key];
                 if (text === undefined) {
                     if (defaults === undefined) {
                         return '{' + key + '}';
