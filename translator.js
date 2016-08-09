@@ -149,7 +149,7 @@
                     key = key.slice(0, key.length - 1);
                 }
 
-                var text = this.translations[key];
+                var text = this.translation[key];
                 if (text === undefined) {
                     if (defaults === undefined) {
                         return '{' + key + '}';
@@ -158,11 +158,13 @@
                 }
 
                 // parameter replacement
-                text = Object.keys(parameters).reduce(function (acc, name) {
-                    var value = parameters[name];
+                if (parameters instanceof Object) {
+                    text = Object.keys(parameters).reduce(function (acc, name) {
+                        var value = parameters[name];
 
-                    return acc.replace(new RegExp('\\[' + name + '\\]', 'gi'), value);
-                }, text);
+                        return acc.replace(new RegExp('\\[' + name + '\\]', 'gi'), value);
+                    }, text);
+                }
 
                 return BBCode.default.parse(text);
             },
