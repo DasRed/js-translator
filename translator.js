@@ -171,7 +171,7 @@
      * @param {String} text
      * @returns {String}
      */
-    Translator.prototypetranslateInline = function (text) {
+    Translator.prototype.translateInline = function (text) {
         var self = this;
 
         // replace the text
