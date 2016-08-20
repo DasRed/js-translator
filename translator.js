@@ -100,108 +100,94 @@
             enumerable: false,
             configurable: false,
             writable: true
-        },
-
-        /**
-         * set Translations
-         *
-         * @param {Object} translations
-         * @returns {Translator}
-         */
-        setTranslations: {
-            value: function (translations) {
-                // merge given into translator
-                for (var locale in translations) {
-                    if (this.translations[locale] === undefined) {
-                        this.translations[locale] = {};
-                    }
-
-                    for (var trKey in translations[locale]) {
-                        this.translations[locale][trKey] = translations[locale][trKey];
-                    }
-                }
-
-                return this;
-            },
-            enumerable: false,
-            configurable: false,
-            writable: true
-        },
-
-        /**
-         * translate a text with given parameters
-         *
-         * @param {String} key
-         * @param {Object} parameters
-         * @param {String} defaults
-         * @returns {String}
-         */
-        translate: {
-            value: function (key, parameters, defaults) {
-                if (key === undefined || key === null) {
-                    return key;
-                }
-
-                if (key.charAt(0) === '{') {
-                    key = key.slice(1);
-                }
-                if (key.charAt(key.length - 1) === '}') {
-                    key = key.slice(0, key.length - 1);
-                }
-
-                var text = this.translation[key];
-                if (text === undefined) {
-                    if (defaults === undefined) {
-                        return '{' + key + '}';
-                    }
-                    text = defaults;
-                }
-
-                // parameter replacement
-                if (parameters instanceof Object) {
-                    text = Object.keys(parameters).reduce(function (acc, name) {
-                        var value = parameters[name];
-
-                        return acc.replace(new RegExp('\\[' + name + '\\]', 'gi'), value);
-                    }, text);
-                }
-
-                return BBCode.default.parse(text);
-            },
-            enumerable: false,
-            configurable: false,
-            writable: true
-        },
-
-        /**
-         * inline translation
-         *
-         * @param {String} text
-         * @returns {String}
-         */
-        translateInline: {
-            value: function (text) {
-                var self = this;
-
-                // replace the text
-                text = text.replace(this.regexpTranslations, function (match, key) {
-                    switch (match.charAt(0)) {
-                        case '\\':
-                            return match.slice(1);
-                        case '$':
-                            return match;
-                    }
-
-                    return self.translate(key, undefined, match);
-                });
-
-                return text;
-            },
-            enumerable: false,
-            configurable: false,
-            writable: true
         }
     });
+
+
+    /**
+     * set Translations
+     *
+     * @param {Object} translations
+     * @returns {Translator}
+     */
+    Translator.prototype.setTranslations = function (translations) {
+        // merge given into translator
+        for (var locale in translations) {
+            if (this.translations[locale] === undefined) {
+                this.translations[locale] = {};
+            }
+
+            for (var trKey in translations[locale]) {
+                this.translations[locale][trKey] = translations[locale][trKey];
+            }
+        }
+
+        return this;
+    };
+
+    /**
+     * translate a text with given parameters
+     *
+     * @param {String} key
+     * @param {Object} parameters
+     * @param {String} defaults
+     * @returns {String}
+     */
+    Translator.prototype.translate = function (key, parameters, defaults) {
+        if (key === undefined || key === null) {
+            return key;
+        }
+
+        if (key.charAt(0) === '{') {
+            key = key.slice(1);
+        }
+        if (key.charAt(key.length - 1) === '}') {
+            key = key.slice(0, key.length - 1);
+        }
+
+        var text = this.translation[key];
+        if (text === undefined) {
+            if (defaults === undefined) {
+                return '{' + key + '}';
+            }
+            text = defaults;
+        }
+
+        // parameter replacement
+        if (parameters instanceof Object) {
+            text = Object.keys(parameters).reduce(function (acc, name) {
+                var value = parameters[name];
+
+                return acc.replace(new RegExp('\\[' + name + '\\]', 'gi'), value);
+            }, text);
+        }
+
+        return BBCode.default.parse(text);
+    };
+
+    /**
+     * inline translation
+     *
+     * @param {String} text
+     * @returns {String}
+     */
+    Translator.prototypetranslateInline = function (text) {
+        var self = this;
+
+        // replace the text
+        text = text.replace(this.regexpTranslations, function (match, key) {
+            switch (match.charAt(0)) {
+                case '\\':
+                    return match.slice(1);
+                case '$':
+                    return match;
+            }
+
+            return self.translate(key, undefined, match);
+        });
+
+        return text;
+    };
 
     // create a default translator
     Translator.default = new Translator({});
