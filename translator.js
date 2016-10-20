@@ -17,7 +17,10 @@
      * Translator
      *
      * @param {Object} translations
-     * @param {Object} options
+     * @param {Object} [options]
+     * @param {String} [options.locale]
+     * @param {RegExp} [options.regexpParameters]
+     * @param {RegExp} [options.regexpTranslations]
      */
     function Translator(translations, options) {
         this.translations = {};
@@ -129,8 +132,8 @@
      * translate a text with given parameters
      *
      * @param {String} key
-     * @param {Object} parameters
-     * @param {String} defaults
+     * @param {Object} [parameters]
+     * @param {String} [defaults]
      * @returns {String}
      */
     Translator.prototype.translate = function (key, parameters, defaults) {
@@ -189,10 +192,19 @@
         return text;
     };
 
-    // create a default translator
+    /**
+     * create a default translator
+     * @type {Translator}
+     */
     Translator.default = new Translator({});
 
-    // Define config function
+
+    /**
+     * Define config function
+     * @type {Function}
+     * @param {Object} translations
+     * @returns {Translator}
+     */
     Translator.setTranslations = Translator.default.setTranslations.bind(Translator.default);
 
     return Translator;
