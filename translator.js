@@ -156,6 +156,10 @@
             text = defaults;
         }
 
+        if (text === null || text === undefined) {
+            return text;
+        }
+
         // parameter replacement
         if (parameters instanceof Object) {
             text = Object.keys(parameters).reduce(function (acc, name) {
