@@ -166,6 +166,32 @@
     };
 
     /**
+     *
+     * @param {String} key
+     * @param {String} [defaults]
+     * @return {*}
+     */
+    Translator.prototype.getValueFromKey = function(key, defaults) {
+        var text = this.translation[key];
+        if (text === undefined) {
+            text = this.translations[this.localeArea][key];
+        }
+
+        if (text === undefined) {
+            text = this.translations[this.localeDefault][key];
+        }
+
+        if (text === undefined) {
+            if (defaults === undefined) {
+                return '{' + key + '}';
+            }
+            text = defaults;
+        }
+
+        return text;
+    };
+
+    /**
      * translate a text with given parameters
      *
      * @param {String} key
@@ -185,14 +211,7 @@
             key = key.slice(0, key.length - 1);
         }
 
-        var text = this.translation[key];
-        if (text === undefined) {
-            if (defaults === undefined) {
-                return '{' + key + '}';
-            }
-            text = defaults;
-        }
-
+        var text = this.getValueFromKey(key, defaults);
         if (text === null || text === undefined) {
             return text;
         }
