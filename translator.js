@@ -160,6 +160,10 @@
             return text;
         }
 
+        if (typeof text !== 'string') {
+            return text;
+        }
+
         // parameter replacement
         if (parameters instanceof Object) {
             text = Object.keys(parameters).reduce(function (acc, name) {
