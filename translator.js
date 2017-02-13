@@ -19,6 +19,8 @@
      * @param {Object} translations
      * @param {Object} [options]
      * @param {String} [options.locale]
+     * @param {String} [options.localeArea]
+     * @param {String} [options.localeDefault]
      * @param {RegExp} [options.regexpParameters]
      * @param {RegExp} [options.regexpTranslations]
      */
@@ -28,6 +30,8 @@
         options = options || {};
 
         this.locale             = options.locale !== undefined ? options.locale : this.locale;
+        this.localeArea         = options.localeArea !== undefined ? options.localeArea : this.locale;
+        this.localeDefault      = options.localeDefault !== undefined ? options.localeDefault : this.locale;
         this.regexpParameters   = options.regexpParameters !== undefined ? options.regexpParameters : this.regexpParameters;
         this.regexpTranslations = options.regexpTranslations !== undefined ? options.regexpTranslations : this.regexpTranslations;
 
@@ -42,6 +46,30 @@
          * @var {String}
          */
         locale: {
+            value: 'en-GB',
+            enumerable: false,
+            configurable: false,
+            writable: true
+        },
+
+        /**
+         * current language area locale
+         *
+         * @var {String}
+         */
+        localeArea: {
+            value: 'en-GB',
+            enumerable: false,
+            configurable: false,
+            writable: true
+        },
+
+        /**
+         * current default locale
+         *
+         * @var {String}
+         */
+        localeDefault: {
             value: 'en-GB',
             enumerable: false,
             configurable: false,
@@ -81,10 +109,19 @@
             enumerable: false,
             configurable: false,
             get: function () {
-                if (this.translations[this.locale] === undefined) {
-                    return {};
+                if (this.translations[this.locale] !== undefined) {
+                    return this.translations[this.locale];
                 }
-                return this.translations[this.locale];
+
+                if (this.translations[this.localeArea] !== undefined) {
+                    return this.translations[this.localeArea];
+                }
+
+                if (this.translations[this.localeDefault] !== undefined) {
+                    return this.translations[this.localeDefault];
+                }
+
+                return {};
             }
         },
 
