@@ -173,11 +173,11 @@
      */
     Translator.prototype.getValueFromKey = function(key, defaults) {
         var text = this.translation[key];
-        if (text === undefined) {
+        if (text === undefined && this.translations[this.localeArea] !== undefined) {
             text = this.translations[this.localeArea][key];
         }
 
-        if (text === undefined) {
+        if (text === undefined && this.translations[this.localeDefault] !== undefined) {
             text = this.translations[this.localeDefault][key];
         }
 
