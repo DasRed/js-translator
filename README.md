@@ -5,6 +5,7 @@ This is a simple translation engine.
 # Installation
 ```bash
 bower install translator --save
+npm install js-translator --save
 ```
 
 # Usage

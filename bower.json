@@ -11,6 +11,6 @@
         "tests"
     ],
     "dependencies": {
-        "bbcode-parser": "^1.0.0"
+        "bbcode-parser": "^1.0.7"
     }
 }
