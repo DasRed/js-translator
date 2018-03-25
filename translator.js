@@ -1,114 +1,58 @@
-'use strict';
-
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define(['bbcode-parser'], function (BBCode) {
-            return factory(BBCode);
-        });
-
-    } else if (typeof exports !== 'undefined') {
-        root.Translator = factory(root.BBCode);
-
+(function (global, factory) {
+    if (typeof define === "function" && define.amd) {
+        define(['exports', '../node_modules/js-bbcode-parser/src/parser.js'], factory);
+    } else if (typeof exports !== "undefined") {
+        factory(exports, require('../node_modules/js-bbcode-parser/src/parser.js'));
     } else {
-        root.Translator = factory(root.BBCode);
+        var mod = {
+            exports: {}
+        };
+        factory(mod.exports, global.parser);
+        global.translator = mod.exports;
     }
-}(this, function (BBCode) {
-    /**
-     * Translator
-     *
-     * @param {Object} translations
-     * @param {Object} [options]
-     * @param {String} [options.locale]
-     * @param {String} [options.localeArea]
-     * @param {String} [options.localeDefault]
-     * @param {RegExp} [options.regexpParameters]
-     * @param {RegExp} [options.regexpTranslations]
-     */
-    function Translator(translations, options) {
-        this.translations = {};
+})(this, function (exports, _parser) {
+    'use strict';
 
-        options = options || {};
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
 
-        this.locale             = options.locale !== undefined ? options.locale : this.locale;
-        this.localeArea         = options.localeArea !== undefined ? options.localeArea : this.locale;
-        this.localeDefault      = options.localeDefault !== undefined ? options.localeDefault : this.locale;
-        this.regexpParameters   = options.regexpParameters !== undefined ? options.regexpParameters : this.regexpParameters;
-        this.regexpTranslations = options.regexpTranslations !== undefined ? options.regexpTranslations : this.regexpTranslations;
+    var _parser2 = _interopRequireDefault(_parser);
 
-        this.setTranslations(translations);
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+            default: obj
+        };
     }
 
-    // prototype
-    Translator.prototype = Object.create(Object.prototype, {
-        /**
-         * current defined locale
-         *
-         * @var {String}
-         */
-        locale: {
-            value: 'en-GB',
-            enumerable: false,
-            configurable: false,
-            writable: true
-        },
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
 
-        /**
-         * current language area locale
-         *
-         * @var {String}
-         */
-        localeArea: {
-            value: 'en-GB',
-            enumerable: false,
-            configurable: false,
-            writable: true
-        },
+    var _createClass = function () {
+        function defineProperties(target, props) {
+            for (var i = 0; i < props.length; i++) {
+                var descriptor = props[i];
+                descriptor.enumerable = descriptor.enumerable || false;
+                descriptor.configurable = true;
+                if ("value" in descriptor) descriptor.writable = true;
+                Object.defineProperty(target, descriptor.key, descriptor);
+            }
+        }
 
-        /**
-         * current default locale
-         *
-         * @var {String}
-         */
-        localeDefault: {
-            value: 'en-GB',
-            enumerable: false,
-            configurable: false,
-            writable: true
-        },
+        return function (Constructor, protoProps, staticProps) {
+            if (protoProps) defineProperties(Constructor.prototype, protoProps);
+            if (staticProps) defineProperties(Constructor, staticProps);
+            return Constructor;
+        };
+    }();
 
-        /**
-         * regexp to transform parameters in translations into object template property
-         *
-         * @var {RegExp}
-         */
-        regexpParameters: {
-            value: /\\?\[([^\[\]]+)\]/g,
-            enumerable: false,
-            configurable: false,
-            writable: true
-        },
-
-        /**
-         * regexp for translations identify
-         *
-         * @var {RegExp}
-         */
-        regexpTranslations: {
-            value: /[\\\$]?\{([^{}]+)\}/g,
-            enumerable: false,
-            configurable: false,
-            writable: true
-        },
-
-        /**
-         * translation for the current locale
-         *
-         * @var {Object}
-         */
-        translation: {
-            enumerable: false,
-            configurable: false,
-            get: function () {
+    var Translator = function () {
+        _createClass(Translator, [{
+            key: 'translation',
+            get: function get() {
                 if (this.translations[this.locale] !== undefined) {
                     return this.translations[this.locale];
                 }
@@ -123,145 +67,149 @@
 
                 return {};
             }
-        },
+        }]);
 
         /**
-         * all translations in structure. structure is
-         *    LOCALE:
-         *        TRKEY => VALUE
-         *        ...
-         *
-         * TRKEY is defined bei "TRFILE.TRINDEX" given from backend
-         *
-         * @var {Object}
+         * @param {Object} translations
+         * @param {Object} [options]
+         * @param {String} [options.locale]
+         * @param {String} [options.localeArea]
+         * @param {String} [options.localeDefault]
+         * @param {RegExp} [options.regexpParameters]
+         * @param {RegExp} [options.regexpTranslations]
          */
-        translations: {
-            value: null,
-            enumerable: false,
-            configurable: false,
-            writable: true
+        function Translator(translations, options) {
+            _classCallCheck(this, Translator);
+
+            /**
+             * all translations in structure. structure is
+             *    LOCALE:
+             *        TRKEY => VALUE
+             *        ...
+             *
+             * TRKEY is defined bei "TRFILE.TRINDEX" given from backend
+             *
+             * @var {Object}
+             */
+            this.translations = {};
+
+            options = options || {};
+
+            this.locale = options.locale !== undefined ? options.locale : 'en-GB';
+            this.localeArea = options.localeArea !== undefined ? options.localeArea : this.locale;
+            this.localeDefault = options.localeDefault !== undefined ? options.localeDefault : this.locale;
+            this.regexpParameters = options.regexpParameters !== undefined ? options.regexpParameters : /\\?\[([^\[\]]+)\]/g;
+            this.regexpTranslations = options.regexpTranslations !== undefined ? options.regexpTranslations : /[\\\$]?\{([^{}]+)\}/g;
+
+            this.setTranslations(translations);
         }
-    });
+
+        /**
+         * set Translations
+         *
+         * @param {Object} translations
+         * @returns {Translator}
+         */
 
 
-    /**
-     * set Translations
-     *
-     * @param {Object} translations
-     * @returns {Translator}
-     */
-    Translator.prototype.setTranslations = function (translations) {
-        // merge given into translator
-        for (var locale in translations) {
-            if (this.translations[locale] === undefined) {
-                this.translations[locale] = {};
+        _createClass(Translator, [{
+            key: 'setTranslations',
+            value: function setTranslations(translations) {
+                // merge given into translator
+                for (var locale in translations) {
+                    if (this.translations[locale] === undefined) {
+                        this.translations[locale] = {};
+                    }
+
+                    for (var trKey in translations[locale]) {
+                        this.translations[locale][trKey] = translations[locale][trKey];
+                    }
+                }
+
+                return this;
             }
+        }, {
+            key: 'getValueFromKey',
+            value: function getValueFromKey(key, defaults) {
+                var text = this.translation[key];
+                if (text === undefined && this.translations[this.localeArea] !== undefined) {
+                    text = this.translations[this.localeArea][key];
+                }
 
-            for (var trKey in translations[locale]) {
-                this.translations[locale][trKey] = translations[locale][trKey];
+                if (text === undefined && this.translations[this.localeDefault] !== undefined) {
+                    text = this.translations[this.localeDefault][key];
+                }
+
+                if (text === undefined) {
+                    if (defaults === undefined) {
+                        return '{' + key + '}';
+                    }
+                    text = defaults;
+                }
+
+                return text;
             }
-        }
+        }, {
+            key: 'translate',
+            value: function translate(key, parameters, defaults) {
+                if (key === undefined || key === null) {
+                    return key;
+                }
 
-        return this;
-    };
+                if (key.charAt(0) === '{') {
+                    key = key.slice(1);
+                }
+                if (key.charAt(key.length - 1) === '}') {
+                    key = key.slice(0, key.length - 1);
+                }
 
-    /**
-     *
-     * @param {String} key
-     * @param {String} [defaults]
-     * @return {*}
-     */
-    Translator.prototype.getValueFromKey = function(key, defaults) {
-        var text = this.translation[key];
-        if (text === undefined && this.translations[this.localeArea] !== undefined) {
-            text = this.translations[this.localeArea][key];
-        }
+                var text = this.getValueFromKey(key, defaults);
+                if (text === null || text === undefined) {
+                    return text;
+                }
 
-        if (text === undefined && this.translations[this.localeDefault] !== undefined) {
-            text = this.translations[this.localeDefault][key];
-        }
+                if (typeof text !== 'string') {
+                    return text;
+                }
 
-        if (text === undefined) {
-            if (defaults === undefined) {
-                return '{' + key + '}';
+                // parameter replacement
+                if (parameters instanceof Object) {
+                    text = Object.keys(parameters).reduce(function (acc, name) {
+                        return acc.replace(new RegExp('\\[' + name + '\\]', 'gi'), parameters[name]);
+                    }, text);
+                }
+
+                return _parser2.default.default.parse(text);
             }
-            text = defaults;
-        }
+        }, {
+            key: 'translateInline',
+            value: function translateInline(text) {
+                var _this = this;
 
-        return text;
-    };
+                // replace the text
+                text = text.replace(this.regexpTranslations, function (match, key) {
+                    switch (match.charAt(0)) {
+                        case '\\':
+                            return match.slice(1);
+                        case '$':
+                            return match;
+                    }
 
-    /**
-     * translate a text with given parameters
-     *
-     * @param {String} key
-     * @param {Object} [parameters]
-     * @param {String} [defaults]
-     * @returns {String}
-     */
-    Translator.prototype.translate = function (key, parameters, defaults) {
-        if (key === undefined || key === null) {
-            return key;
-        }
+                    return _this.translate(key, undefined, match);
+                });
 
-        if (key.charAt(0) === '{') {
-            key = key.slice(1);
-        }
-        if (key.charAt(key.length - 1) === '}') {
-            key = key.slice(0, key.length - 1);
-        }
-
-        var text = this.getValueFromKey(key, defaults);
-        if (text === null || text === undefined) {
-            return text;
-        }
-
-        if (typeof text !== 'string') {
-            return text;
-        }
-
-        // parameter replacement
-        if (parameters instanceof Object) {
-            text = Object.keys(parameters).reduce(function (acc, name) {
-                var value = parameters[name];
-
-                return acc.replace(new RegExp('\\[' + name + '\\]', 'gi'), value);
-            }, text);
-        }
-
-        return BBCode.default.parse(text);
-    };
-
-    /**
-     * inline translation
-     *
-     * @param {String} text
-     * @returns {String}
-     */
-    Translator.prototype.translateInline = function (text) {
-        var self = this;
-
-        // replace the text
-        text = text.replace(this.regexpTranslations, function (match, key) {
-            switch (match.charAt(0)) {
-                case '\\':
-                    return match.slice(1);
-                case '$':
-                    return match;
+                return text;
             }
+        }]);
 
-            return self.translate(key, undefined, match);
-        });
-
-        return text;
-    };
+        return Translator;
+    }();
 
     /**
      * create a default translator
      * @type {Translator}
      */
     Translator.default = new Translator({});
-
 
     /**
      * Define config function
@@ -271,5 +219,5 @@
      */
     Translator.setTranslations = Translator.default.setTranslations.bind(Translator.default);
 
-    return Translator;
-}));
+    exports.default = Translator;
+});
