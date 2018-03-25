@@ -111,8 +111,10 @@ console.log(translator.translate('price')); // [VALUE] €
 
 ## Translation
 You can translation with the "translate" function with given parameter.
-```js
-let translator = new Translator(translationConfig, {locale: 'fr-FR', localeDefault: 'de-DE'});
+```javascript
+import translator from 'translator';
+
+let translatorA = translator.create(translationConfig, {locale: 'fr-FR', localeDefault: 'de-DE'});
 console.log(translator.translate('price', {value: '10.11'})); // 10.11 €
 console.log(translator.translate('price')); // [VALUE] €
 ```
@@ -150,8 +152,10 @@ You can also translate a text (may it is HTML) with inline translations
     <button type="button">{buttonCancel}</button>
 </form>
 ```
-```js
-let translator = new Translator(translationConfig, {locale: 'fr-FR', localeDefault: 'de-DE'});
+```javascript
+import translator from 'translator';
+
+let translatorA = translator.create(translationConfig, {locale: 'fr-FR', localeDefault: 'de-DE'});
 console.log(translator.translateInline(html));
 ```
 
@@ -167,9 +171,11 @@ console.log(translator.translateInline(html));
 ## Default Translator
 A default translator with default configuration and no translation keys is available. This default translator is used in the [js-translator-lodash-bridge](https://github.com/DasRed/js-translator-lodash-bridge) and [js-translator-lodash-requirejs-bridge](https://github.com/DasRed/js-translator-lodash-requirejs-bridge).
 You can configure this translator:
-```js
-Translator.default.setTranslations(translationConfig);
-Translator.default.locale = 'de-AT';
-Translator.default.localeArea = 'de-DE';
-Translator.default.localeDefault = 'en-GB';
+```javascript
+import translator from 'translator';
+
+translator.setTranslations(translationConfig);
+translator.locale = 'de-AT';
+translator.localeArea = 'de-DE';
+translator.localeDefault = 'en-GB';
 ```

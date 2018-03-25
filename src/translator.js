@@ -176,18 +176,8 @@ class Translator {
     };
 }
 
-/**
- * create a default translator
- * @type {Translator}
- */
-Translator.default = new Translator({});
+const translator = new Translator({});
 
-/**
- * Define config function
- * @type {Function}
- * @param {Object} translations
- * @returns {Translator}
- */
-Translator.setTranslations = Translator.default.setTranslations.bind(Translator.default);
+translator.create = Translator;
 
-export default Translator;
+export default translator;
