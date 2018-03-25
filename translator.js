@@ -1,29 +1,21 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', '../node_modules/js-bbcode-parser/src/parser.js'], factory);
+        define(['exports'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('../node_modules/js-bbcode-parser/src/parser.js'));
+        factory(exports);
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.parser);
+        factory(mod.exports);
         global.translator = mod.exports;
     }
-})(this, function (exports, _parser) {
+})(this, function (exports) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
-
-    var _parser2 = _interopRequireDefault(_parser);
-
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : {
-            default: obj
-        };
-    }
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -72,6 +64,7 @@
         /**
          * @param {Object} translations
          * @param {Object} [options]
+         * @param {BBCode} [options.bbCodeParser]
          * @param {String} [options.locale]
          * @param {String} [options.localeArea]
          * @param {String} [options.localeDefault]
@@ -95,6 +88,7 @@
 
             options = options || {};
 
+            this.bbCodeParser = options.bbCodeParser;
             this.locale = options.locale !== undefined ? options.locale : 'en-GB';
             this.localeArea = options.localeArea !== undefined ? options.localeArea : this.locale;
             this.localeDefault = options.localeDefault !== undefined ? options.localeDefault : this.locale;
@@ -105,14 +99,20 @@
         }
 
         /**
-         * set Translations
          *
-         * @param {Object} translations
-         * @returns {Translator}
+         * @param {BBCode} bbCodeParser
+         * @return {Translator}
          */
 
 
         _createClass(Translator, [{
+            key: 'setBBCodeParser',
+            value: function setBBCodeParser(bbCodeParser) {
+                this.bbCodeParser = bbCodeParser;
+
+                return this;
+            }
+        }, {
             key: 'setTranslations',
             value: function setTranslations(translations) {
                 // merge given into translator
@@ -179,7 +179,11 @@
                     }, text);
                 }
 
-                return _parser2.default.default.parse(text);
+                if (this.bbCodeParser === undefined) {
+                    return text;
+                }
+
+                return this.bbCodeParser.parse(text);
             }
         }, {
             key: 'translateInline',
