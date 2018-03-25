@@ -13,7 +13,7 @@
     "url": "https://github.com/DasRed/js-translator/issues"
   },
   "homepage": "https://github.com/DasRed/js-translator#readme",
-  "dependencies": {
+  "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "js-bbcode-parser": "^1.0.8"
