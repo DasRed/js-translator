@@ -1,5 +1,3 @@
-import BBCode from '../node_modules/js-bbcode-parser/src/parser.js'
-
 class Translator {
     /**
      *
@@ -24,6 +22,7 @@ class Translator {
     /**
      * @param {Object} translations
      * @param {Object} [options]
+     * @param {BBCode} [options.bbCodeParser]
      * @param {String} [options.locale]
      * @param {String} [options.localeArea]
      * @param {String} [options.localeDefault]
@@ -45,6 +44,7 @@ class Translator {
 
         options = options || {};
 
+        this.bbCodeParser       = options.bbCodeParser;
         this.locale             = options.locale !== undefined ? options.locale : 'en-GB';
         this.localeArea         = options.localeArea !== undefined ? options.localeArea : this.locale;
         this.localeDefault      = options.localeDefault !== undefined ? options.localeDefault : this.locale;
@@ -52,6 +52,17 @@ class Translator {
         this.regexpTranslations = options.regexpTranslations !== undefined ? options.regexpTranslations : /[\\\$]?\{([^{}]+)\}/g;
 
         this.setTranslations(translations);
+    }
+
+    /**
+     *
+     * @param {BBCode} bbCodeParser
+     * @return {Translator}
+     */
+    setBBCodeParser(bbCodeParser) {
+        this.bbCodeParser = bbCodeParser;
+
+        return this;
     }
 
     /**
@@ -135,7 +146,11 @@ class Translator {
             text = Object.keys(parameters).reduce((acc, name) => acc.replace(new RegExp('\\[' + name + '\\]', 'gi'), parameters[name]), text);
         }
 
-        return BBCode.default.parse(text);
+        if (this.bbCodeParser === undefined) {
+            return text;
+        }
+
+        return this.bbCodeParser.parse(text);
     };
 
     /**
@@ -166,7 +181,6 @@ class Translator {
  * @type {Translator}
  */
 Translator.default = new Translator({});
-
 
 /**
  * Define config function

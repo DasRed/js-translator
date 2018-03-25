@@ -1,6 +1,6 @@
 {
   "name": "js-translator",
-  "version": "1.1.4",
+  "version": "2.0.0",
   "description": "Simple translator with bbcode support.",
   "main": "translator.js",
   "repository": {
@@ -16,7 +16,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
-    "js-bbcode-parser": "^1.0.8"
+    "js-bbcode-parser": "^1.0.9"
   },
   "scripts": {
     "build": "babel src -d ."
