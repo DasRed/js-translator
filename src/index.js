@@ -1,4 +1,4 @@
-class Translator {
+export default class Translator {
     /**
      *
      * @return {Object}
@@ -21,15 +21,14 @@ class Translator {
 
     /**
      * @param {Object} translations
-     * @param {Object} [options]
-     * @param {BBCode} [options.bbCodeParser]
-     * @param {String} [options.locale]
-     * @param {String} [options.localeArea]
-     * @param {String} [options.localeDefault]
-     * @param {RegExp} [options.regexpParameters]
-     * @param {RegExp} [options.regexpTranslations]
+     * @param {BBCode} [bbCodeParser]
+     * @param {String} [locale]
+     * @param {String} [localeArea]
+     * @param {String} [localeDefault]
+     * @param {RegExp} [regexpParameters]
+     * @param {RegExp} [regexpTranslations]
      */
-    constructor(translations, options) {
+    constructor(translations, {bbCodeParser = undefined, locale = 'en-GB', localeArea = 'en-GB', localeDefault = 'en-GB', regexpParameters = /\\?\[([^\[\]]+)\]/g, regexpTranslations = /[\\\$]?\{([^{}]+)\}/g}) {
         /**
          * all translations in structure. structure is
          *    LOCALE:
@@ -42,48 +41,14 @@ class Translator {
          */
         this.translations = {};
 
-        options = options || {};
-
-        this.bbCodeParser       = options.bbCodeParser;
-        this.locale             = options.locale !== undefined ? options.locale : 'en-GB';
-        this.localeArea         = options.localeArea !== undefined ? options.localeArea : this.locale;
-        this.localeDefault      = options.localeDefault !== undefined ? options.localeDefault : this.locale;
-        this.regexpParameters   = options.regexpParameters !== undefined ? options.regexpParameters : /\\?\[([^\[\]]+)\]/g;
-        this.regexpTranslations = options.regexpTranslations !== undefined ? options.regexpTranslations : /[\\\$]?\{([^{}]+)\}/g;
+        this.bbCodeParser       = bbCodeParser;
+        this.locale             = locale;
+        this.localeArea         = localeArea;
+        this.localeDefault      = localeDefault;
+        this.regexpParameters   = regexpParameters;
+        this.regexpTranslations = regexpTranslations;
 
         this.setTranslations(translations);
-    }
-
-    /**
-     *
-     * @param {BBCode} bbCodeParser
-     * @return {Translator}
-     */
-    setBBCodeParser(bbCodeParser) {
-        this.bbCodeParser = bbCodeParser;
-
-        return this;
-    }
-
-    /**
-     * set Translations
-     *
-     * @param {Object} translations
-     * @returns {Translator}
-     */
-    setTranslations(translations) {
-        // merge given into translator
-        for (let locale in translations) {
-            if (this.translations[locale] === undefined) {
-                this.translations[locale] = {};
-            }
-
-            for (let trKey in translations[locale]) {
-                this.translations[locale][trKey] = translations[locale][trKey];
-            }
-        }
-
-        return this;
     }
 
     /**
@@ -110,6 +75,35 @@ class Translator {
         }
 
         return text;
+    }
+
+    /**
+     *
+     * @param {BBCode} bbCodeParser
+     * @return {Translator}
+     */
+    setBBCodeParser(bbCodeParser) {
+        this.bbCodeParser = bbCodeParser;
+
+        return this;
+    }
+
+    /**
+     * set Translations
+     *
+     * @param {Object} translations
+     * @returns {Translator}
+     */
+    setTranslations(translations) {
+        Object.entries(translations).forEach(([locale, values]) => {
+            if (this.translations[locale] === undefined) {
+                this.translations[locale] = {};
+            }
+
+            this.translations[locale] = {...values};
+        });
+
+        return this;
     }
 
     /**
@@ -175,9 +169,3 @@ class Translator {
         return text;
     };
 }
-
-const translator = new Translator({});
-
-translator.create = Translator;
-
-export default translator;

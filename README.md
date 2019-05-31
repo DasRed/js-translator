@@ -10,7 +10,7 @@ npm install js-translator --save
 
 # Usage
 ## Config structure
-The [translator](src/translator.js) requires at least 2 arguments. The first argument is the translation config. The second argument are the options. 
+The [translator](src/index.js) requires at least 2 arguments. The first argument is the translation config. The second argument are the options. 
 
 The following structure for translation config will be used.
 
