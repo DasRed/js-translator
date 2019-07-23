@@ -1,6 +1,6 @@
 {
     "name": "js-translator",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "description": "Simple translator with bbcode support.",
     "main": "src/index.js",
     "repository": {
