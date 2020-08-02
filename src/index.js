@@ -28,7 +28,14 @@ export default class Translator {
      * @param {RegExp} [regexpParameters]
      * @param {RegExp} [regexpTranslations]
      */
-    constructor(translations, {bbCodeParser = undefined, locale = 'en-GB', localeArea = 'en-GB', localeDefault = 'en-GB', regexpParameters = /\\?\[([^\[\]]+)\]/g, regexpTranslations = /[\\\$]?\{([^{}]+)\}/g}) {
+    constructor(translations, {
+        bbCodeParser = undefined,
+        locale = 'en-GB',
+        localeArea = 'en-GB',
+        localeDefault = 'en-GB',
+        regexpParameters = /\\?\[([^\[\]]+)\]/g,
+        regexpTranslations = /[\\\$]?\{([^{}]+)\}/g,
+    }) {
         /**
          * all translations in structure. structure is
          *    LOCALE:
@@ -58,13 +65,15 @@ export default class Translator {
      * @return {*}
      */
     getValueFromKey(key, defaults) {
-        let text = this.translation[key];
+        const keys = key.split('.');
+
+        let text = keys.reduce((acc, entry) => acc[entry] ?? undefined, this.translation);
         if (text === undefined && this.translations[this.localeArea] !== undefined) {
-            text = this.translations[this.localeArea][key];
+            text = keys.reduce((acc, entry) => acc[entry] ?? undefined, this.translations[this.localeArea]);
         }
 
         if (text === undefined && this.translations[this.localeDefault] !== undefined) {
-            text = this.translations[this.localeDefault][key];
+            text = keys.reduce((acc, entry) => acc[entry] ?? undefined, this.translations[this.localeDefault]);
         }
 
         if (text === undefined) {
